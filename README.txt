@@ -1,7 +1,21 @@
 PC-9800 - ビットマップTTFフォント
 
 説明
-  あとで書きます。
+  このソフトは NEC PC-9800 シリーズのフォントをTTFに変換するソフトです。
+  NEC PC-9800 シリーズのフォントROMイメージファイルが必要です。
+  Neko Project II の GETBIOS などで、FONT.ROM を作っておいてください。
+
+使い方
+  data/FONT.ROM にフォントROMイメージをおいて make してください。
+
+コンパイルに必要なソフトウェア
+  - make
+  - Ruby
+  - FontForge
+  - bdfresize
+  - Potrace
+  - patch
+  - sed
 
 アーカイブに同梱されているファイルのオリジナル配付サイト
   - 東雲 ビットマップフォントファミリー
@@ -29,12 +43,3 @@ PC-9800 - ビットマップTTFフォント
     http://kanji.zinbun.kyoto-u.ac.jp/~yasuoka/ftp/CJKtable/Uni2JIS.Z
   - data/EXT.TXT
 
-
-コンパイルに必要なソフトウェア
-  - make
-  - Ruby
-  - FontForge
-  - bdfresize
-  - Potrace
-  - patch
-  - sed
