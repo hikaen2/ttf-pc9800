@@ -1,0 +1,16 @@
+#!/usr/bin/fontforge -script
+#
+# createttf.pe
+# This file is part of TTF PC-9800.
+#
+
+Open("data/template.sfd")
+Import("compiled/pc-9800.bdf")
+Import("compiled/svg/u*.svg")
+RenameGlyphs("Adobe Glyph List")
+SetFontNames("PC_9800", "PC-9800", "PC-9800", "Regular", " ", $1)
+Save("compiled/pc-9800.sfd")
+Generate("compiled/pc-9800.ttf", "ttf")
+
+Close()
+Quit()

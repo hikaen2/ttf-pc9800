@@ -1,0 +1,52 @@
+SplineFontDB: 3.0
+FontName: PC_9800
+FullName: PC-9800
+FamilyName: PC-9800
+Weight: Regular
+Copyright:  
+Version: 001.000
+ItalicAngle: 0
+UnderlinePosition: -128
+UnderlineWidth: 50
+Ascent: 896
+Descent: 128
+LayerCount: 2
+Layer: 0 0 "Back"  1
+Layer: 1 0 "Fore"  0
+XUID: [1021 757 1332301061 7994489]
+FSType: 8
+OS2Version: 1
+OS2_WeightWidthSlopeOnly: 0
+OS2_UseTypoMetrics: 1
+CreationTime: 1357214118
+ModificationTime: 1357214118
+PfmFamily: 49
+TTFWeight: 500
+TTFWidth: 5
+LineGap: 0
+VLineGap: 0
+Panose: 2 0 6 9 0 0 0 0 0 0
+OS2TypoAscent: 0
+OS2TypoAOffset: 1
+OS2TypoDescent: 0
+OS2TypoDOffset: 1
+OS2TypoLinegap: 0
+OS2WinAscent: 0
+OS2WinAOffset: 1
+OS2WinDescent: 0
+OS2WinDOffset: 1
+HheadAscent: 0
+HheadAOffset: 1
+HheadDescent: 0
+HheadDOffset: 1
+OS2Vendor: 'PfEd'
+DEI: 91125
+Encoding: UnicodeBmp
+UnicodeInterp: none
+NameList: Adobe Glyph List
+DisplaySize: -24
+AntiAlias: 1
+FitToEm: 1
+BeginChars: 65536 0
+EndChars
+EndSplineFont
