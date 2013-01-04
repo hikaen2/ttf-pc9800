@@ -11,7 +11,7 @@ ttf:
 	mkdir compiled/svg
 	ruby src/bdf2pbm.rb compiled/pc-9800-x4.bdf compiled/svg
 	rm compiled/pc-9800-x4.bdf
-	potrace -s -z white -a -1 compiled/svg/*.pbm
+	potrace -s -z black -a -1 compiled/svg/*.pbm
 	rm compiled/svg/*.pbm
 	fontforge -script src/createttf.pe `date '+%Y.%m.%d'`
 	rm -rf compiled/svg
@@ -28,9 +28,9 @@ bdf:
 	rm compiled/shnmk16-unicode.bdf
 	rm compiled/shnm8x16r-unicode.bdf
 	sed -i 's/CHARSET_REGISTRY .*/CHARSET_REGISTRY "ISO10646"/' compiled/pc-9800.bdf
-	sed -i "s/STARTCHAR .*/STARTCHAR (for_rename)/" compiled/pc-9800.bdf
-	sed -i "s/SWIDTH 480 0/SWIDTH 512 0/" compiled/pc-9800.bdf
-	sed -i "s/SWIDTH 960 0/SWIDTH 1024 0/" compiled/pc-9800.bdf
+	sed -i 's/STARTCHAR .*/STARTCHAR (for_rename)/' compiled/pc-9800.bdf
+	sed -i 's/SWIDTH 480 0/SWIDTH 512 0/' compiled/pc-9800.bdf
+	sed -i 's/SWIDTH 960 0/SWIDTH 1024 0/' compiled/pc-9800.bdf
 
 map:
 	ruby src/createmap.rb data/Uni2JIS data/CP932.TXT > data/EXT.TXT
