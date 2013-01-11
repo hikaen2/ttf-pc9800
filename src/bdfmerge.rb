@@ -10,7 +10,7 @@ if ARGV.length < 2
 end
 
 
-print IO.read(ARGV[0]).match(/^.*ENDPROPERTIES\s*\n/m).to_s
+print IO.read(ARGV[-1]).match(/^.*ENDPROPERTIES\s*\n/m).to_s
 
 chars = {}
 ARGV.each do |arg|
