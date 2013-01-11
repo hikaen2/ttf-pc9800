@@ -22,6 +22,9 @@ def to_bdf(bin)
     char << "ENDCHAR\n"
   end
 
+
+  bin = bin.ljust(288768, 255.chr)  # 288768 = 8*256 + 16*256 + 32*8832
+
   ((0.. 255).map {|i| [i,               bin[0x0800+i*16, 16].each_byte.to_a] } +
    (0..8831).map {|i| [index_to_jis(i), bin[0x1800+i*32, 16].each_byte.zip(bin[0x1800+i*32+16, 16].each_byte).flatten] }).
     select {|code, integers| integers.any? {|byte| byte > 0 } }.
@@ -36,17 +39,12 @@ end
 
 print <<EOS
 STARTFONT 2.1
-FONT -Shinonome-Gothic-Medium-R-Normal--16-150-75-75-C-160-JISX0208.1990-0
+FONT -FontForge-PC9800-Medium-R-Normal--16-150-75-75-C-160-JISX0208.1978-0
 SIZE 16 75 75
 FONTBOUNDINGBOX 16 16 0 -2
-STARTPROPERTIES 20
-FONT_ASCENT 14
-FONT_DESCENT 2
-DEFAULT_CHAR 8481
-COPYRIGHT "Public Domain"
-FONTNAME_REGISTRY ""
-FOUNDRY "Shinonome"
-FAMILY_NAME "Gothic"
+STARTPROPERTIES 18
+FOUNDRY "FontForge"
+FAMILY_NAME "PC9800"
 WEIGHT_NAME "Medium"
 SLANT "R"
 SETWIDTH_NAME "Normal"
@@ -59,10 +57,14 @@ SPACING "C"
 AVERAGE_WIDTH 160
 CHARSET_REGISTRY "JISX0208.1978"
 CHARSET_ENCODING "0"
+FONT_ASCENT 14
+FONT_DESCENT 2
+DEFAULT_CHAR 8481
+FONTNAME_REGISTRY ""
 ENDPROPERTIES
 CHARS 6879
 EOS
 
-print to_bdf(File.open(ARGV[0], "rb").read).join()
+print to_bdf(File.open(ARGV[0], 'rb').read).join()
 
 puts 'ENDFONT'
