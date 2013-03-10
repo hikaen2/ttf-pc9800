@@ -20,7 +20,7 @@ def jis_to_sjis(jiscode)
   return (high << 8) | low
 end
 
-  
+
 def kuten_to_jis(ku, ten)
   ((ku + 0x20) << 8) + (ten + 0x20)
 end
@@ -50,7 +50,39 @@ db.transaction do
   db.execute("INSERT INTO sjisext_to_unicode SELECT * FROM cp932_to_unicode WHERE cp932 BETWEEN #{0xED40} AND #{0xEF3F}")  # 89ku..92ku
 
   db.execute("UPDATE sjisext_to_unicode SET unicode = #{0xA5} WHERE sjisext = #{0x5C} AND unicode = #{0x5C}")  # 0x5C is YEN SIGN(U+00A5), not REVERSE SOLIDUS(U+005C).
-  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xFC}, #{0x5C})")  # In PC-9800, 0xFC is REVERSE SOLIDUS(U+005C) 
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xFC}, #{0x5C})")   # REVERSE SOLIDUS
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x80}, #{0x2581})") # LOWER ONE EIGHTH BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x81}, #{0x2582})") # LOWER ONE QUARTER BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x82}, #{0x2583})") # LOWER THREE EIGHTHS BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x83}, #{0x2584})") # LOWER HALF BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x84}, #{0x2585})") # LOWER FIVE EIGHTHS BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x85}, #{0x2586})") # LOWER THREE QUARTERS BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x86}, #{0x2587})") # LOWER SEVEN EIGHTHS BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x87}, #{0x2588})") # FULL BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x88}, #{0x258F})") # LEFT ONE EIGHTH BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x89}, #{0x258E})") # LEFT ONE QUARTER BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x8A}, #{0x258D})") # LEFT THREE EIGHTHS BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x8B}, #{0x258C})") # LEFT HALF BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x8C}, #{0x258B})") # LEFT FIVE EIGHTHS BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x8D}, #{0x258A})") # LEFT THREE QUARTERS BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x8E}, #{0x2589})") # LEFT SEVEN EIGHTHS BLOCK
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x9C}, #{0x256D})") # BOX DRAWINGS LIGHT ARC DOWN AND RIGHT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x9D}, #{0x256E})") # BOX DRAWINGS LIGHT ARC DOWN AND LEFT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x9E}, #{0x2570})") # BOX DRAWINGS LIGHT ARC UP AND RIGHT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0x9F}, #{0x256F})") # BOX DRAWINGS LIGHT ARC UP AND LEFT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xE8}, #{0x2660})") # BLACK SPADE SUIT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xE9}, #{0x2665})") # BLACK HEART SUIT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xEA}, #{0x2666})") # BLACK DIAMOND SUIT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xEB}, #{0x2663})") # BLACK CLUB SUIT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xE4}, #{0x25E2})") # BLACK LOWER RIGHT TRIANGLE
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xE5}, #{0x25E3})") # BLACK LOWER LEFT TRIANGLE
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xE6}, #{0x25E5})") # BLACK UPPER RIGHT TRIANGLE
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xE7}, #{0x25E4})") # BLACK UPPER LEFT TRIANGLE
+#  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xEC}, #{0xFFED})") # HALFWIDTH BLACK SQUARE
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xED}, #{0xFFEE})") # HALFWIDTH WHITE CIRCLE
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xEE}, #{0x2571})") # BOX DRAWINGS LIGHT DIAGONAL UPPER RIGHT TO LOWER LEFT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xEF}, #{0x2572})") # BOX DRAWINGS LIGHT DIAGONAL UPPER LEFT TO LOWER RIGHT
+  db.execute("INSERT INTO sjisext_to_unicode VALUES(#{0xF0}, #{0x2573})") # BOX DRAWINGS LIGHT DIAGONAL CROSS
 end
 
 table = db.execute('SELECT * FROM sjisext_to_unicode ORDER BY sjisext')
