@@ -9,11 +9,13 @@ def to_bdf(bin)
     (((i / 96 + 1 + 0x20) << 8) + (i - (i / 96) * 96 + 0x20))
   end
 
-  def integers_to_bdf(code, integers)
+  def integers_to_bdf(jis, integers)
+    integers = integers.select.with_index {|n,i| i%2==0} if (0x2920..0x2b7f).include?(jis)
+
     # integers.length is 16 or 32
     char = ''
     char << "STARTCHAR (for_rename)\n"
-    char << "ENCODING #{code}\n"
+    char << "ENCODING #{jis}\n"
     char << "SWIDTH #{integers.length*32} 0\n"    # 512 or 1024
     char << "DWIDTH #{integers.length/2} 0\n"     # 8 or 16
     char << "BBX #{integers.length/2} 16 0 -2\n"  # 8 or 16
@@ -27,8 +29,8 @@ def to_bdf(bin)
 
   ((0.. 255).map {|i| [i,               bin[0x0800+i*16, 16].each_byte.to_a] } +
    (0..8831).map {|i| [index_to_jis(i), bin[0x1800+i*32, 16].each_byte.zip(bin[0x1800+i*32+16, 16].each_byte).flatten] }).
-    select {|code, integers| integers.any? {|byte| byte > 0 } }.
-    map {|code, integers| integers_to_bdf(code, integers) }
+    reject {|jis, integers| integers.all? {|byte| byte == 0 } }.
+    map {|jis, integers| integers_to_bdf(jis, integers) }
 end
 
 
