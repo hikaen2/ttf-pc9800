@@ -8,7 +8,7 @@ all: bdf ttf
 ttf:
 	bdfresize -b 1 -f 4 < compiled/pc-9800.bdf > compiled/pc-9800-x4.bdf
 	rm -rf compiled/svg
-	mkdir compiled/svg
+	mkdir -p compiled/svg
 	ruby src/bdf2pbm.rb compiled/pc-9800-x4.bdf compiled/svg
 	rm compiled/pc-9800-x4.bdf
 	potrace -s -z black -a -1 compiled/svg/*.pbm
@@ -17,7 +17,7 @@ ttf:
 	rm -rf compiled/svg
 
 bdf:
-	-mkdir compiled
+	mkdir -p compiled
 	ruby src/fontrom2bdf.rb data/FONT.ROM > compiled/fontrom.bdf
 	ruby src/bdfremap.rb compiled/fontrom.bdf data/EXT.TXT > compiled/fontrom-unicode.bdf
 	ruby src/bdfremap.rb data/shnmk16.bdf data/CP932.TXT > compiled/shnmk16-unicode.bdf
