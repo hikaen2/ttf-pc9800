@@ -67,6 +67,6 @@ ENDPROPERTIES
 CHARS 6879
 EOS
 
-print to_bdf(File.open(ARGV[0], 'rb').read).join()
+print to_bdf(IO.binread(ARGV.first)).join()
 
 puts 'ENDFONT'
