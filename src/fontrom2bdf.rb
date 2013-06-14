@@ -4,36 +4,6 @@
 # This file is part of TTF PC-9800.
 #
 
-def to_bdf(bin)
-  def index_to_jis(i)
-    (((i / 96 + 1 + 0x20) << 8) + (i - (i / 96) * 96 + 0x20))
-  end
-
-  def integers_to_bdf(jis, integers)
-    integers = integers.select.with_index {|n,i| i%2==0} if (0x2920..0x2b7f).include?(jis)
-
-    # integers.length is 16 or 32
-    char = ''
-    char << "STARTCHAR (for_rename)\n"
-    char << "ENCODING #{jis}\n"
-    char << "SWIDTH #{integers.length*32} 0\n"    # 512 or 1024
-    char << "DWIDTH #{integers.length/2} 0\n"     # 8 or 16
-    char << "BBX #{integers.length/2} 16 0 -2\n"  # 8 or 16
-    char << "BITMAP\n"
-    char << integers.pack('C*').unpack('H*')[0].upcase.gsub(/[0-9A-Fa-f]{#{integers.length/8}}/, "\\0\n")
-    char << "ENDCHAR\n"
-  end
-
-
-  bin = bin.ljust(288768, 255.chr)  # 288768 = 8*256 + 16*256 + 32*8832
-
-  ((0.. 255).map {|i| [i,               bin[0x0800+i*16, 16].each_byte.to_a] } +
-   (0..8831).map {|i| [index_to_jis(i), bin[0x1800+i*32, 16].each_byte.zip(bin[0x1800+i*32+16, 16].each_byte).flatten] }).
-    reject {|jis, integers| integers.all? {|byte| byte == 0 } }.
-    map {|jis, integers| integers_to_bdf(jis, integers) }
-end
-
-
 if ARGV.length != 1
   puts 'Usage: fontrom2hex.rb FONT.ROM'
   exit 1
@@ -67,6 +37,22 @@ ENDPROPERTIES
 CHARS 6879
 EOS
 
-print to_bdf(IO.binread(ARGV.first)).join()
+File.open(ARGV.first, 'rb:ascii-8bit') do |f|
+  f.seek(0x0800)
+  (256 + 8832).times do |i|
+    bin = (f.read(i < 256 ? 16 : 32) or '').ljust(i < 256 ? 16 : 32, 255.chr)
+    next if bin.each_byte.all? {|byte| byte == 0}
+    bin = bin[0, 16] if (0x2920..0x2b7f).include?(i < 256 ? i : ((((i - 256) / 96 + 1 + 0x20) << 8) + ((i - 256) - ((i - 256) / 96) * 96 + 0x20)))
+    bin = bin[0, 16].each_byte.zip(bin[16, 16].each_byte).flatten.pack('C*') if bin.length == 32
+    print "STARTCHAR (for_rename)\n"
+    print "ENCODING #{i < 256 ? i : ((((i - 256) / 96 + 1 + 0x20) << 8) + ((i - 256) - ((i - 256) / 96) * 96 + 0x20))}\n"
+    print "SWIDTH #{bin.length * 32} 0\n"    # 512 or 1024
+    print "DWIDTH #{bin.length / 2} 0\n"     # 8 or 16
+    print "BBX #{bin.length / 2} 16 0 -2\n"  # 8 or 16
+    print "BITMAP\n"
+    print bin.unpack('H*').first.upcase.gsub(/[0-9A-Fa-f]{#{bin.length/8}}/, "\\0\n")
+    print "ENDCHAR\n"
+  end
+end
 
-puts 'ENDFONT'
+print "ENDFONT\n"
