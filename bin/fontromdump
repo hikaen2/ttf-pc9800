@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+#
+# fontromdump
+# usage: fontromdump < FONT.ROM > out.pbm
+#
+# Created by hikaen2 on 2019-10-22
+# Licensed under the MIT license
+#
+
+#
+#  0 16 ..
+#  |  |
+# 15 31 ..
+#
+
+LINES = 16
+COLS = 192
+ROWS = 94  # 288768 / LINES / COLS
+
+font = STDIN.read.force_encoding('ASCII-8BIT')
+buf = "\0" * (COLS * ROWS * LINES)
+buf.force_encoding('ASCII-8BIT')
+cur = 0
+
+ROWS.times do |y|
+  COLS.times do |x|
+    LINES.times do |l|
+      break if font[cur].nil?
+      buf[(COLS * LINES * y) + (COLS * l) + x] = font[cur]
+      cur = cur + 1
+    end
+  end
+end
+
+print("P4\n%d %d\n%s" % [COLS * 8, ROWS * LINES, buf])
