@@ -7,9 +7,7 @@
 # http://opensource.org/licenses/mit-license.php
 #
 
-require 'rubygems'
 require 'sqlite3'
-require 'tempfile'
 
 
 def jis_to_sjis(jiscode)
@@ -35,7 +33,7 @@ if ARGV.length != 2
 end
 
 
-db = SQLite3::Database.new(Tempfile.new('').path)
+db = SQLite3::Database.new(':memory:')
 db.execute('CREATE TABLE sjis78_to_unicode (sjis78 INTEGER PRIMARY KEY, unicode INTEGER)')
 db.execute('CREATE TABLE cp932_to_unicode (cp932 INTEGER PRIMARY KEY, unicode INTEGER)')
 db.execute('CREATE TABLE sjisext_to_unicode (sjisext INTEGER PRIMARY KEY, unicode INTEGER)')
