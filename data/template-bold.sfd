@@ -2,7 +2,7 @@ SplineFontDB: 3.0
 FontName: PC_9800
 FullName: PC-9800
 FamilyName: PC-9800
-Weight: Regular
+Weight: Bold
 Copyright:  
 Version: 001.000
 ItalicAngle: 0
@@ -21,7 +21,7 @@ OS2_UseTypoMetrics: 1
 CreationTime: 1357214118
 ModificationTime: 1357214118
 PfmFamily: 49
-TTFWeight: 500
+TTFWeight: 700
 TTFWidth: 5
 LineGap: 0
 VLineGap: 0

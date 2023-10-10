@@ -2,9 +2,8 @@
 #
 # createmap.rb
 #
-# Copyright (c) 2015 Suzuki Taro
-# Released under the MIT license
-# http://opensource.org/licenses/mit-license.php
+# Copyright (c) 2013 Suzuki Taro
+# MIT License
 #
 
 require 'sqlite3'

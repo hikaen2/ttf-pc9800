@@ -1,0 +1,19 @@
+#!/usr/bin/fontforge -script
+#
+# createttf-bold.pe
+#
+
+Open("data/template-bold.sfd")
+Import("dist/pc-9800-bold.bdf")
+Import("dist/svg/u*.svg")
+RenameGlyphs("Adobe Glyph List")
+SetFontNames("PC_9800_Bold", "PC-9800", "PC-9800 Bold", "Bold", " ", $1)
+SelectAll()
+Simplify()
+CanonicalStart()
+CanonicalContours()
+Save("dist/pc-9800-bold.sfd")
+Generate("dist/pc-9800-bold.ttf", "ttf", 4)
+
+Close()
+Quit()

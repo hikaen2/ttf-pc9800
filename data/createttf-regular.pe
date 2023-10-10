@@ -1,0 +1,19 @@
+#!/usr/bin/fontforge -script
+#
+# createttf-regular.pe
+#
+
+Open("data/template-regular.sfd")
+Import("dist/pc-9800-regular.bdf")
+Import("dist/svg/u*.svg")
+RenameGlyphs("Adobe Glyph List")
+SetFontNames("PC_9800_Regular", "PC-9800", "PC-9800 Regular", "Regular", " ", $1)
+SelectAll()
+Simplify()
+CanonicalStart()
+CanonicalContours()
+Save("dist/pc-9800-regular.sfd")
+Generate("dist/pc-9800-regular.ttf", "ttf", 4)
+
+Close()
+Quit()

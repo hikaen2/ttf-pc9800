@@ -3,8 +3,8 @@
 # fontromdump
 # usage: fontromdump < FONT.ROM > out.pbm
 #
-# Created by hikaen2 on 2019-10-22
-# Licensed under the MIT license
+# Copyright (c) 2013 Suzuki Taro
+# MIT License
 #
 
 #
