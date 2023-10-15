@@ -6,7 +6,7 @@
 # MIT License
 #
 
-if ARGV.length < 2
+if ARGV.length < 1
   puts "Usage: bdfmerge.rb basefile addfiles ..."
   exit 1
 end

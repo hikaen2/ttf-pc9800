@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 #
-# fontrom2bdf.rb
+# fontrom2bdf
 #
 # Copyright (c) 2013 Suzuki Taro
 # MIT License
 #
 
 if ARGV.length != 1
-  puts 'Usage: fontrom2hex.rb FONT.ROM'
+  puts 'Usage: fontrom2bdf FONT.ROM > out.bdf'
   exit 1
 end
 
@@ -39,15 +39,21 @@ ENDPROPERTIES
 CHARS 6879
 EOS
 
+def jis(i)
+  return i if i < 256
+  i -= 256
+  ((i / 96 + 0x21) << 8) + (i % 96 + 0x20)
+end
+
 File.open(ARGV.first, 'rb:ascii-8bit') do |f|
   f.seek(0x0800)
   (256 + 8832).times do |i|
     bin = (f.read(i < 256 ? 16 : 32) or '').ljust(i < 256 ? 16 : 32, 255.chr)
-    next if bin.each_byte.all? {|byte| byte == 0}
-    bin = bin[0, 16] if (0x2920..0x2b7f).include?(i < 256 ? i : ((((i - 256) / 96 + 1 + 0x20) << 8) + ((i - 256) - ((i - 256) / 96) * 96 + 0x20)))
+    next if jis(i) != 0x20 && jis(i) != 0x2121 && bin.each_byte.all? {|byte| byte == 0}
+    bin = bin[0, 16] if (0x2920..0x2b7f).include?(jis(i))
     bin = bin[0, 16].each_byte.zip(bin[16, 16].each_byte).flatten.pack('C*') if bin.length == 32
     print "STARTCHAR (for_rename)\n"
-    print "ENCODING #{i < 256 ? i : ((((i - 256) / 96 + 1 + 0x20) << 8) + ((i - 256) - ((i - 256) / 96) * 96 + 0x20))}\n"
+    print "ENCODING #{jis(i)}\n"
     print "SWIDTH #{bin.length * 32} 0\n"    # 512 or 1024
     print "DWIDTH #{bin.length / 2} 0\n"     # 8 or 16
     print "BBX #{bin.length / 2} 16 0 -2\n"  # 8 or 16

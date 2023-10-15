@@ -1,0 +1,124 @@
+#!/usr/bin/env ruby
+#
+# createhtml
+# usage:
+#   createhtml < data/EXT.TXT > out.html
+#
+# Copyright (c) 2013 Suzuki Taro
+# MIT License
+#
+require 'unicode/name'
+
+def object_position(i)
+  if i < 256
+    return 'object-position:-%dpx -%dpx;' % [i / 2 * 8, i % 2 * 8]
+  end
+  if i < 512
+    i = i - 256 + 128
+    return 'object-position:-%dpx -%dpx;' % [i % 192 * 8, i / 192 * 16]
+  end
+  i = i - 512 + 192
+  return 'object-position:-%dpx -%dpx;' % [i % 96 * 16, i / 96 * 16]
+end
+
+def jis(i)
+  if i < 256
+    return i
+  end
+  if i < 512
+    return i - 256
+  end
+  i -= 512
+  ((i / 96 + 0x21) << 8) + (i % 96 + 0x20)
+end
+
+@map = IO.read('data/EXT.TXT').scan(/0x([0-9A-Fa-f]+)[ \t]+0x([0-9A-Fa-f]+)/).map {|jis, unicode| [jis.hex, unicode.hex] }.to_h
+def unicode(jis)
+  return 'U+%04x' % @map[jis] if @map[jis]
+  'n/c'
+end
+
+def unicode_name(jis)
+  return Unicode::Name.of(@map[jis].chr('UTF-8')) if @map[jis]
+  ''
+end
+
+require 'erb'
+ERB.new(DATA.read, trim_mode: '-').run(binding)
+
+__END__
+<html>
+<body>
+<style>
+  table {
+    font-size: 9pt;
+  }
+  td.nc {
+    background-color: gray;
+  }
+  img {
+    object-fit: none;
+    border: 1px solid #ddd;
+    transform: scale(2);
+    image-rendering: pixelated;
+    margin: 10px;
+  }
+  #a img {
+    width: 8px;
+    height: 8px;
+  }
+  #b img {
+    width: 8px;
+    height: 16px;
+  }
+  #c img {
+    width: 16px;
+    height: 16px;
+  }
+</style>
+
+<%- i=0 -%>
+<h2>8x8</h2>
+<table id="a">
+  <%- 8.times do -%>
+  <tr>
+    <%- 32.times do -%>
+    <td class="nc">
+      <img src="dump.png" style="<%= object_position(i) %>"><br><%= i.to_s(16) %><br><%= jis(i).to_s(16) %><br>n/c
+    </td>
+    <%- i+=1 -%>
+    <%- end -%>
+  </tr>
+  <%- end -%>
+</table>
+
+<h2>8x16</h2>
+<table id="b">
+  <%- 8.times do -%>
+  <tr>
+    <%- 32.times do -%>
+    <td <%= unicode(jis(i)) == 'n/c' ? 'class="nc"' : '' %>>
+      <img src="dump.png" style="<%= object_position(i) %>" title="<%= unicode_name(jis(i)) %>"><br><%= i.to_s(16) %><br><%= jis(i).to_s(16) %><br><%= unicode(jis(i)) %>
+    </td>
+    <%- i+=1 -%>
+    <%- end -%>
+  </tr>
+  <%- end -%>
+</table>
+
+<h2>16x16</h2>
+<table id="c">
+  <%- 92.times do -%>
+  <tr>
+    <%- 96.times do -%>
+    <td <%= unicode(jis(i)) == 'n/c' ? 'class="nc"' : '' %>>
+      <img src="dump.png" style="<%= object_position(i) %>" title="<%= unicode_name(jis(i)) %>"><br><%= i.to_s(16) %><br><%= jis(i).to_s(16) %><br><%= unicode(jis(i)) %>
+    </td>
+    <%- i+=1 -%>
+    <%- end -%>
+  </tr>
+  <%- end -%>
+</table>
+
+</body>
+</html>

@@ -1,35 +1,35 @@
 #!/usr/bin/env ruby
 #
 # fontromdump
-# usage: fontromdump < FONT.ROM > out.pbm
+# usage:
+#   gem install mini_magick
+#   fontromdump < FONT.ROM > out.png
 #
 # Copyright (c) 2013 Suzuki Taro
 # MIT License
 #
+
+require 'mini_magick'
 
 #
 #  0 16 ..
 #  |  |
 # 15 31 ..
 #
-
 LINES = 16
 COLS = 192
 ROWS = 94  # 288768 / LINES / COLS
 
-font = STDIN.read.force_encoding('ASCII-8BIT')
-buf = "\0" * (COLS * ROWS * LINES)
-buf.force_encoding('ASCII-8BIT')
-cur = 0
-
+font = ARGF.read(ROWS * COLS * LINES).ljust(ROWS * COLS * LINES, "\0").chars
+buf = ("\0" * (ROWS * COLS * LINES)).force_encoding('ASCII-8BIT')
 ROWS.times do |y|
   COLS.times do |x|
     LINES.times do |l|
-      break if font[cur].nil?
-      buf[(COLS * LINES * y) + (COLS * l) + x] = font[cur]
-      cur = cur + 1
+      buf[(COLS * LINES * y) + (COLS * l) + x] = font.shift
     end
   end
 end
 
-print("P4\n%d %d\n%s" % [COLS * 8, ROWS * LINES, buf])
+blob = ("P4\n%d %d\n" % [COLS * 8, ROWS * LINES]) + buf
+
+print MiniMagick::Image.read(blob).format('png').to_blob

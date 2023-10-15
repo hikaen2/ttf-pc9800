@@ -1,4 +1,3 @@
-
 all: bdf regular bold
 
 regular:
@@ -26,14 +25,15 @@ bold:
 bdf:
 	mkdir -p dist
 	bin/fontrom2bdf data/FONT.ROM > dist/fontrom.bdf
-	bin/bdfremap dist/fontrom.bdf   data/EXT.TXT     > dist/fontrom-unicode.bdf
-	bin/bdfremap data/shnmk16.bdf   data/CP932.TXT   > dist/shnmk16-unicode.bdf
-	bin/bdfremap data/shnm8x16r.bdf data/JIS0201.TXT > dist/shnm8x16r-unicode.bdf
-	bin/bdfmerge data/shnm8x16a.bdf dist/shnm8x16r-unicode.bdf dist/shnmk16-unicode.bdf dist/fontrom-unicode.bdf > dist/pc-9800-regular.bdf
+	bin/bdfremap dist/fontrom.bdf   data/EXT.TXT       > dist/fontrom-unicode.bdf
+	bin/bdfremap data/shnmk16.bdf   data/CP932.JIS.TXT > dist/shnmk16-unicode.bdf
+# 	bin/bdfremap data/shnm8x16r.bdf data/JIS0201.TXT   > dist/shnm8x16r-unicode.bdf
+# 	bin/bdfmerge data/shnm8x16a.bdf dist/shnm8x16r-unicode.bdf dist/shnmk16-unicode.bdf dist/fontrom-unicode.bdf > dist/pc-9800-regular.bdf
+	bin/bdfmerge dist/shnmk16-unicode.bdf dist/fontrom-unicode.bdf > dist/pc-9800-regular.bdf
 	rm dist/fontrom.bdf
 	rm dist/fontrom-unicode.bdf
 	rm dist/shnmk16-unicode.bdf
-	rm dist/shnm8x16r-unicode.bdf
+# 	rm dist/shnm8x16r-unicode.bdf
 	sed -i 's/CHARSET_REGISTRY .*/CHARSET_REGISTRY "ISO10646"/' dist/pc-9800-regular.bdf
 	sed -i 's/STARTCHAR .*/STARTCHAR (for_rename)/'             dist/pc-9800-regular.bdf
 	sed -i 's/SWIDTH 480 0/SWIDTH 512 0/'                       dist/pc-9800-regular.bdf
@@ -41,7 +41,13 @@ bdf:
 	perl bin/mkbold -l -R dist/pc-9800-regular.bdf > dist/pc-9800-bold.bdf
 
 map:
-	bin/createmap data/Uni2JIS data/CP932.TXT > data/EXT.TXT
+	bin/sjis2jis   < data/CP932.TXT > data/CP932.JIS.TXT
+	bin/createmap data/JIS2Uni data/CP932.JIS.TXT > data/EXT.TXT
+
+dump:
+	mkdir -p dist
+	bin/fontromdump < data/FONT.ROM > dist/dump.png
+	bin/createhtml  < data/EXT.TXT  > dist/dump.html
 
 clean:
 	-rm dist/fontrom.bdf
